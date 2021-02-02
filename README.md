@@ -20,6 +20,9 @@ BGE is responsible for maintaining game state.
 
 ### BGE
 
+-   [ ] Game has a welcome screen
+-   [ ] Game has an interactive menu
+
 -   [ ] Caller can invoke a `startGame()` function to begin a 1-player game. This function will generate an 8x8 game board consisting of 3 ships having a width of one square and a length of:
 
     -   Destroyer: 2 squares
