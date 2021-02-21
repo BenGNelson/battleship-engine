@@ -9,7 +9,7 @@ void Start_main_menu();
 
 int main()
 {
-	srand((unsigned) time(0));
+	srand((unsigned)time(0));
 	//TODO Make this start main menu
 	//Start_main_menu();
 	Start_game();
@@ -45,7 +45,10 @@ void Start_main_menu()
 	cout << "                                                                         \n";
 
 	// display menu
-	cout << "Main Menu\n" << "1. Play\n" << "2. Exit\n" << "Enter your selection: ";
+	cout << "Main Menu\n"
+		 << "1. Play\n"
+		 << "2. Exit\n"
+		 << "Enter your selection: ";
 	string selection = "";
 	cin >> selection;
 
