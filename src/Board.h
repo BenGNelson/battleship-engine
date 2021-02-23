@@ -14,7 +14,12 @@ private:
     char **play_space;
     int Get_random_x();
     int Get_random_y();
+    int Get_random_orientation();
     bool Is_spot_occupied(char spot);
+    void Add_ship_to_board(char ship);
+    bool Is_in_bounds(int coords);
+    bool Is_not_overlapping(int x, int y, int orientation);
+    void Place_spot(int x, int y, char ship);
     void Place_destroyer();
     void Place_cruiser();
     void Place_battleship();
@@ -49,6 +54,17 @@ int Board::Get_width()
     return width;
 };
 
+int Board::Get_random_orientation()
+{
+    int random = (rand() % 10) + 1;
+    // return 0 for horizontal or 1 for vertical
+    if (random % 2 == 0)
+    {
+        return 0;
+    }
+    return 1;
+};
+
 int Board::Get_random_x()
 {
     return (rand() % length);
@@ -80,69 +96,147 @@ void Board::Print()
     }
 };
 
-void Board::Place_destroyer()
+void Board::Add_ship_to_board(char ship)
 {
     bool placed = false;
     int x = Get_random_x();
     int y = Get_random_y();
-    while (placed == false)
+    int orientation = Get_random_orientation();
+
+    if (orientation == 0)
     {
-        if (Is_spot_occupied(play_space[x][y]) == false)
+        while (placed == false)
         {
-            play_space[x][y] = 'D';
-            placed = true;
+            // horizontal
+            if (Is_in_bounds(x) && Is_not_overlapping(x, y, orientation))
+            {
+                //soemthing
+                Place_spot(x - 1, y, ship);
+                Place_spot(x, y, ship);
+                Place_spot(x + 1, y, ship);
+                placed = true;
+            }
+            else
+            {
+                x = Get_random_x();
+                y = Get_random_y();
+            }
         }
-        else
+    }
+    else
+    {
+        while (placed == false)
         {
-            x = Get_random_x();
-            y = Get_random_y();
+            // vertical
+            if (Is_in_bounds(y) && Is_not_overlapping(x, y, orientation))
+            {
+                //soemthing
+                Place_spot(x, y - 1, ship);
+                Place_spot(x, y, ship);
+                Place_spot(x, y + 1, ship);
+                placed = true;
+            }
+            else
+            {
+                x = Get_random_x();
+                y = Get_random_y();
+            }
         }
     }
 };
 
-void Board::Place_cruiser()
+
+bool Board::Is_in_bounds(int coord)
 {
-    bool placed = false;
-    int x = Get_random_x();
-    int y = Get_random_y();
-    while (placed == false)
+    if (coord -1 > 0 && coord > 0 && coord + 1 > 0)
     {
-        if (Is_spot_occupied(play_space[x][y]) == false)
-        {
-            play_space[x][y] = 'C';
-            placed = true;
-        }
-        else
-        {
-            x = Get_random_x();
-            y = Get_random_y();
-        }
+        return true;
     }
+    return false;
 };
 
-void Board::Place_battleship()
+bool Board::Is_not_overlapping(int x, int y, int orientation)
 {
-    bool placed = false;
-    int x = Get_random_x();
-    int y = Get_random_y();
-    while (placed == false)
+    if (orientation == 0)
     {
-        if (Is_spot_occupied(play_space[x][y]) == false)
+        // horizontal
+        if (
+            !Is_spot_occupied(play_space[x - 1][y]) &&
+            !Is_spot_occupied(play_space[x][y]) &&
+            !Is_spot_occupied(play_space[x + 1][y]))
+
         {
-            play_space[x][y] = 'B';
-            placed = true;
-        }
-        else
-        {
-            x = Get_random_x();
-            y = Get_random_y();
+            return true;
         }
     }
+    else
+    {
+        // vertical
+        if (
+            !Is_spot_occupied(play_space[x][y - 1]) &&
+            !Is_spot_occupied(play_space[x][y]) &&
+            !Is_spot_occupied(play_space[x][y + 1]))
+        {
+            return true;
+        }
+    }
+    return false;
 };
 
-void Board::Place_ships()
-{
-    Place_destroyer();
-    Place_cruiser();
-    Place_battleship();
-};
+    void Board::Place_spot(int x, int y, char ship)
+    {
+        play_space[x][y] = ship;
+    };
+
+    void Board::Place_destroyer()
+    {
+        bool placed = false;
+        int x = Get_random_x();
+        int y = Get_random_y();
+        std::cout << Get_random_orientation() << std::endl;
+        while (placed == false)
+        {
+            if (Is_spot_occupied(play_space[x][y]) == false)
+            {
+                play_space[x][y] = 'D';
+                placed = true;
+            }
+            else
+            {
+                x = Get_random_x();
+                y = Get_random_y();
+            }
+        }
+    };
+
+    void Board::Place_cruiser()
+    {
+        Add_ship_to_board('C');
+    };
+
+    void Board::Place_battleship()
+    {
+        bool placed = false;
+        int x = Get_random_x();
+        int y = Get_random_y();
+        while (placed == false)
+        {
+            if (Is_spot_occupied(play_space[x][y]) == false)
+            {
+                play_space[x][y] = 'B';
+                placed = true;
+            }
+            else
+            {
+                x = Get_random_x();
+                y = Get_random_y();
+            }
+        }
+    };
+
+    void Board::Place_ships()
+    {
+        Place_destroyer();
+        Place_cruiser();
+        Place_battleship();
+    };
