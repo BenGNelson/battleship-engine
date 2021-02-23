@@ -19,6 +19,7 @@ Ship::Ship(char t, int s)
 {
     type = t;
     size = s;
+    orientation = Set_orientation();
 };
 
 char Ship::Get_type()
