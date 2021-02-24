@@ -19,6 +19,8 @@ private:
     int Get_random_orientation();
     bool Is_spot_occupied(char spot);
     void Add_ship_to_board(Ship ship);
+    void Add_ship_horizontally(int x, int y,Ship ship);
+    void Add_ship_vertically(int x, int y,Ship ship);
     bool Is_in_bounds(int coords, int size);
     bool Is_overlapping(int x, int y, Ship ship);
     void Place_spot(int x, int y, char ship);
@@ -100,19 +102,30 @@ void Board::Add_ship_to_board(Ship ship)
     bool placed = false;
     int x = Get_random_x();
     int y = Get_random_y();
-    int orientation = ship.Get_orientation();
-    char ship_type = ship.Get_type();
 
-    if (orientation == 0)
+    if (ship.Get_orientation() == 0)
     {
         // horizontal
-        while (placed == false)
+        Add_ship_horizontally(x, y, ship);
+    }
+    else
+    {
+        // vertical
+        Add_ship_vertically(x, y, ship);
+    }
+};
+
+void Board::Add_ship_horizontally(int x, int y, Ship ship)
+{
+    bool placed = false;
+
+    while (placed == false)
         {
             if (Is_in_bounds(x, ship.Get_size()) && !Is_overlapping(x, y, ship))
             {
                 for (int i = 0; i < ship.Get_size(); i++)
                 {
-                    Place_spot(x + i, y, ship_type);
+                    Place_spot(x + i, y, ship.Get_type());
                 }
                 placed = true;
             }
@@ -122,17 +135,19 @@ void Board::Add_ship_to_board(Ship ship)
                 y = Get_random_y();
             }
         }
-    }
-    else
-    {
-        // vertical
-        while (placed == false)
+}
+
+void Board::Add_ship_vertically(int x, int y, Ship ship)
+{
+    bool placed = false;
+
+    while (placed == false)
         {
             if (Is_in_bounds(y, ship.Get_size()) && !Is_overlapping(x, y, ship))
             {
                 for (int i = 0; i < ship.Get_size(); i++)
                 {
-                    Place_spot(x, y + i, ship_type);
+                    Place_spot(x, y + i, ship.Get_type());
                 }
                 placed = true;
             }
@@ -142,8 +157,8 @@ void Board::Add_ship_to_board(Ship ship)
                 y = Get_random_y();
             }
         }
-    }
-};
+}
+
 
 bool Board::Is_in_bounds(int coord, int size)
 {

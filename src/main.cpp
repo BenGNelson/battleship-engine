@@ -11,8 +11,8 @@ int main()
 {
 	srand((unsigned)time(0));
 	//TODO Make this start main menu
-	//Start_main_menu();
-	Start_game();
+	Start_main_menu();
+	//Start_game();
 }
 
 void Start_game()
