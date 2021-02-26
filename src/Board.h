@@ -16,7 +16,6 @@ private:
     char **play_space;
     int Get_random_x();
     int Get_random_y();
-    int Get_random_orientation();
     bool Is_spot_occupied(char spot);
     void Add_ship_to_board(Ship ship);
     void Add_ship_horizontally(int x, int y,Ship ship);
@@ -53,17 +52,6 @@ int Board::Get_length()
 int Board::Get_width()
 {
     return width;
-};
-
-int Board::Get_random_orientation()
-{
-    int random = (rand() % 10) + 1;
-    // return 0 for horizontal or 1 for vertical
-    if (random % 2 == 0)
-    {
-        return 0;
-    }
-    return 1;
 };
 
 int Board::Get_random_x()
