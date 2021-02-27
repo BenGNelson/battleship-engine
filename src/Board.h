@@ -6,24 +6,24 @@ class Board
 {
 public:
     Board(int l, int w);
-    int Get_length();
-    int Get_width();
-    void Print();
+    int get_length();
+    int get_width();
+    void print();
 
 private:
     int length;
     int width;
     char **play_space;
-    int Get_random_x();
-    int Get_random_y();
-    bool Is_spot_occupied(char spot);
-    void Add_ship_to_board(Ship ship);
-    void Add_ship_horizontally(int x, int y,Ship ship);
-    void Add_ship_vertically(int x, int y,Ship ship);
-    bool Is_in_bounds(int coords, int size);
-    bool Is_overlapping(int x, int y, Ship ship);
-    void Place_spot(int x, int y, char ship);
-    void Place_ships();
+    int get_random_x();
+    int get_random_y();
+    bool is_spot_occupied(char spot);
+    void add_ship_to_board(Ship ship);
+    void add_ship_horizontally(int x, int y,Ship ship);
+    void add_ship_vertically(int x, int y,Ship ship);
+    bool is_in_bounds(int coords, int size);
+    bool is_overlapping(int x, int y, Ship ship);
+    void place_spot(int x, int y, char ship);
+    void place_ships();
 };
 
 Board::Board(int l, int w)
@@ -41,30 +41,30 @@ Board::Board(int l, int w)
         }
     }
 
-    Place_ships();
+    place_ships();
 };
 
-int Board::Get_length()
+int Board::get_length()
 {
     return length;
 };
 
-int Board::Get_width()
+int Board::get_width()
 {
     return width;
 };
 
-int Board::Get_random_x()
+int Board::get_random_x()
 {
     return (rand() % length);
 };
 
-int Board::Get_random_y()
+int Board::get_random_y()
 {
     return (rand() % width);
 };
 
-bool Board::Is_spot_occupied(char spot)
+bool Board::is_spot_occupied(char spot)
 {
     if (spot == '-')
     {
@@ -73,7 +73,7 @@ bool Board::Is_spot_occupied(char spot)
     return true;
 };
 
-void Board::Print()
+void Board::print()
 {
     for (int i = 0; i < length; ++i)
     {
@@ -85,79 +85,79 @@ void Board::Print()
     }
 };
 
-void Board::Add_ship_to_board(Ship ship)
+void Board::add_ship_to_board(Ship ship)
 {
     bool placed = false;
-    int x = Get_random_x();
-    int y = Get_random_y();
+    int x = get_random_x();
+    int y = get_random_y();
 
     if (ship.Get_orientation() == 0)
     {
         // horizontal
-        Add_ship_horizontally(x, y, ship);
+        add_ship_horizontally(x, y, ship);
     }
     else
     {
         // vertical
-        Add_ship_vertically(x, y, ship);
+        add_ship_vertically(x, y, ship);
     }
 };
 
-void Board::Add_ship_horizontally(int x, int y, Ship ship)
+void Board::add_ship_horizontally(int x, int y, Ship ship)
 {
     bool placed = false;
 
     while (placed == false)
         {
-            if (Is_in_bounds(x, ship.Get_size()) && !Is_overlapping(x, y, ship))
+            if (is_in_bounds(x, ship.Get_size()) && !is_overlapping(x, y, ship))
             {
                 for (int i = 0; i < ship.Get_size(); i++)
                 {
-                    Place_spot(x + i, y, ship.Get_type());
+                    place_spot(x + i, y, ship.Get_type());
                 }
                 placed = true;
             }
             else
             {
-                x = Get_random_x();
-                y = Get_random_y();
+                x = get_random_x();
+                y = get_random_y();
             }
         }
 }
 
-void Board::Add_ship_vertically(int x, int y, Ship ship)
+void Board::add_ship_vertically(int x, int y, Ship ship)
 {
     bool placed = false;
 
     while (placed == false)
         {
-            if (Is_in_bounds(y, ship.Get_size()) && !Is_overlapping(x, y, ship))
+            if (is_in_bounds(y, ship.Get_size()) && !is_overlapping(x, y, ship))
             {
                 for (int i = 0; i < ship.Get_size(); i++)
                 {
-                    Place_spot(x, y + i, ship.Get_type());
+                    place_spot(x, y + i, ship.Get_type());
                 }
                 placed = true;
             }
             else
             {
-                x = Get_random_x();
-                y = Get_random_y();
+                x = get_random_x();
+                y = get_random_y();
             }
         }
 }
 
 
-bool Board::Is_in_bounds(int coord, int size)
+bool Board::is_in_bounds(int coord, int size)
 {
-    if ((coord + (size - 1)) > (Get_length() - 1))
+    if ((coord + (size - 1)) > (get_length() - 1))
     {
         return false;
     }
     return true;
 };
 
-bool Board::Is_overlapping(int x, int y, Ship ship)
+bool Board::is_overlapping(int x, int y, Ship ship)
 {
     bool overlapping = false;
 
@@ -166,7 +166,7 @@ bool Board::Is_overlapping(int x, int y, Ship ship)
         // horizontal
         for (int i = 0; i < ship.Get_size(); i++)
         {
-            if (Is_spot_occupied(play_space[y][x + i]))
+            if (is_spot_occupied(play_space[y][x + i]))
             {
                 overlapping = true;
             }
@@ -177,7 +177,7 @@ bool Board::Is_overlapping(int x, int y, Ship ship)
         // horizontal
         for (int i = 0; i < ship.Get_size(); i++)
         {
-            if (Is_spot_occupied(play_space[y + i][x]))
+            if (is_spot_occupied(play_space[y + i][x]))
             {
                 overlapping = true;
             }
@@ -186,17 +186,17 @@ bool Board::Is_overlapping(int x, int y, Ship ship)
     return overlapping;
 };
 
-void Board::Place_spot(int x, int y, char ship)
+void Board::place_spot(int x, int y, char ship)
 {
     play_space[y][x] = ship;
 };
 
-void Board::Place_ships()
+void Board::place_ships()
 {
     Ship destroyer('D', 2);
     Ship cruiser('C', 3);
     Ship battleship('B', 4);
-    Add_ship_to_board(destroyer);
-    Add_ship_to_board(cruiser);
-    Add_ship_to_board(battleship);
+    add_ship_to_board(destroyer);
+    add_ship_to_board(cruiser);
+    add_ship_to_board(battleship);
 };
